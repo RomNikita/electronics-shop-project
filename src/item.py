@@ -1,3 +1,6 @@
+import csv
+
+
 class Item:
     """
     Класс для представления товара в магазине.
@@ -13,10 +16,11 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+        self.__name = name
         self.price = price
         self.quantity = quantity
-        Item.all.append(self)
+        self.all.append(self)
+
 
     def calculate_total_price(self) -> float:
         """
@@ -31,3 +35,35 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price *= self.pay_rate
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, name_put):
+        if len(name_put) <= 10:
+            self.__name = name_put
+        else:
+            raise Exception ('Длина наименования товара превышает 10 символов.')
+
+
+    @staticmethod
+    def string_to_number(number: str):
+        if number.isdigit() == True:
+            return int(number)
+        return int(float(number))
+
+
+    @classmethod
+    def instantiate_from_csv(cls) -> None:
+        cls.all.clear()
+        try:
+            with open('../src/items.csv', 'r', newline='') as csvfile:
+                reader = csv.DictReader(csvfile)
+                for raw in reader:
+                    cls(raw['name'], raw['price'], raw['quantity'])
+        except FileNotFoundError:
+            print('Файл не найден')
+
+
