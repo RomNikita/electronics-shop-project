@@ -8,7 +8,6 @@ def item1():
     return Item("Смартфон", 20000, 10)
 
 
-
 def test_calculate_total_price(item1):
     assert item1.calculate_total_price() == 200000
 
